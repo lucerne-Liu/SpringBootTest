@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,5 +57,17 @@ public class EmployeesApplicationTests {
                 "{\"id\":4,\"name\":\"小刚\",\"age\":16,\"gender\":\"男\"}," +
                 "{\"id\":5,\"name\":\"小霞\",\"age\":15,\"gender\":\"女\"}," +
                 "{\"id\":6,\"name\":\"小闷\",\"age\":26,\"gender\":\"男\"}]")));
+    }
+
+    @Test
+    public void should_update_employeesList_after_update_employee() throws Exception {
+        request = put("/employees/1").param("name","小明").param("age","11").param("gender","女");
+        mvc.perform(request);
+        request = get("/employees");
+        mvc.perform(request).andExpect(status().isOk()).andExpect(content().string(equalTo("[{\"id\":1,\"name\":\"小明\",\"age\":11,\"gender\":\"女\"}," +
+                "{\"id\":2,\"name\":\"小红\",\"age\":19,\"gender\":\"女\"}," +
+                "{\"id\":3,\"name\":\"小智\",\"age\":15,\"gender\":\"男\"}," +
+                "{\"id\":4,\"name\":\"小刚\",\"age\":16,\"gender\":\"男\"}," +
+                "{\"id\":5,\"name\":\"小霞\",\"age\":15,\"gender\":\"女\"}]")));
     }
 }
