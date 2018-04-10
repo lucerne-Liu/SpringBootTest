@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,4 +39,9 @@ public class EmployeesApplicationTests {
 				"{\"id\":5,\"name\":\"小霞\",\"age\":15,\"gender\":\"女\"}]")));
 	}
 
+    @Test
+    public void should_return_success_when_add_employee() throws Exception {
+        request = post("/employees").param("id","6").param("name","小闷").param("age","26").param("gender","男");
+        mvc.perform(request).andExpect(status().isOk()).andExpect(content().string(equalTo("success")));
+    }
 }
