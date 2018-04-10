@@ -44,4 +44,17 @@ public class EmployeesApplicationTests {
         request = post("/employees").param("id","6").param("name","小闷").param("age","26").param("gender","男");
         mvc.perform(request).andExpect(status().isOk()).andExpect(content().string(equalTo("success")));
     }
+
+    @Test
+    public void should_include_new_employees_after_add_employee() throws Exception {
+        request = post("/employees").param("id","6").param("name","小闷").param("age","26").param("gender","男");
+        mvc.perform(request);
+        request = get("/employees");
+        mvc.perform(request).andExpect(status().isOk()).andExpect(content().string(equalTo("[{\"id\":1,\"name\":\"小明\",\"age\":20,\"gender\":\"男\"}," +
+                "{\"id\":2,\"name\":\"小红\",\"age\":19,\"gender\":\"女\"}," +
+                "{\"id\":3,\"name\":\"小智\",\"age\":15,\"gender\":\"男\"}," +
+                "{\"id\":4,\"name\":\"小刚\",\"age\":16,\"gender\":\"男\"}," +
+                "{\"id\":5,\"name\":\"小霞\",\"age\":15,\"gender\":\"女\"}," +
+                "{\"id\":6,\"name\":\"小闷\",\"age\":26,\"gender\":\"男\"}]")));
+    }
 }
