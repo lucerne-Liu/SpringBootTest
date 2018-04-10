@@ -1,6 +1,5 @@
 package com.thoughtworks.employees;
 
-import com.thoughtworks.employees.web.HelloController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

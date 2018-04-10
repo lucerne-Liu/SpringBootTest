@@ -1,6 +1,5 @@
 package com.thoughtworks.employees;
 
-import com.thoughtworks.employees.web.HelloController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
