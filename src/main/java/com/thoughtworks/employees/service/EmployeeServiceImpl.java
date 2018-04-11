@@ -32,18 +32,27 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public String saveEmployee(Employee employee) {
+    public String saveEmployee(Employee employee) throws Exception{
+        if (employee.getId() == null || employee.getAge() == null || employee.getName() == null || employee.getGender() == null) {
+            throw new Exception("Invalid Employee!");
+        }
         employees.put(employee.getId(), employee);
         return "success";
     }
 
     @Override
     public Employee getEmployee(Long id) {
-        return employees.get(id);
+        return employees.containsKey(id) ? employees.get(id) : null;
     }
 
     @Override
-    public String updateEmployee(Long id, Employee employee) {
+    public String updateEmployee(Long id, Employee employee) throws Exception {
+        if (employee.getId() == null || employee.getAge() == null || employee.getName() == null || employee.getGender() == null) {
+            throw new Exception("Invalid Employee!");
+        }
+        if (!employees.containsKey(id)) {
+            throw new Exception("Employee not found by id: " + id);
+        }
         Employee newEmplyee = employees.get(id);
         newEmplyee.setName(employee.getName());
         newEmplyee.setAge(employee.getAge());
@@ -53,7 +62,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public String deleteEmployee(Long id) {
+    public String deleteEmployee(Long id) throws Exception {
+        if (!employees.containsKey(id)) {
+            throw new Exception("Employee not found by id: " + id);
+        }
         employees.remove(id);
         return "success";
     }

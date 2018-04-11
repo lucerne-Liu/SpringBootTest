@@ -1,4 +1,4 @@
-package com.thoughtworks.employees.web;
+package com.thoughtworks.employees.controller;
 
 import com.thoughtworks.employees.model.Employee;
 import com.thoughtworks.employees.service.EmployeeService;
@@ -19,7 +19,7 @@ public class EmployeeController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String saveEmployee(@ModelAttribute Employee employee) {
+    public String saveEmployee(@ModelAttribute Employee employee) throws Exception {
         return employeeService.saveEmployee(employee);
     }
 
@@ -29,12 +29,12 @@ public class EmployeeController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public String updateEmployee(@PathVariable Long id, @ModelAttribute Employee employee) {
+    public String updateEmployee(@PathVariable Long id, @ModelAttribute Employee employee) throws Exception {
         return employeeService.updateEmployee(id, employee);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public String deleteEmployee(@PathVariable Long id) {
+    public String deleteEmployee(@PathVariable Long id) throws Exception {
         return employeeService.deleteEmployee(id);
     }
 }
