@@ -1,4 +1,4 @@
-package com.thoughtworks.employees.domain;
+package com.thoughtworks.employees.model;
 
 public class Employee {
     private Long id;
