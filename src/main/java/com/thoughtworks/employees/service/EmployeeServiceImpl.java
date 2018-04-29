@@ -8,65 +8,86 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+
 @Component
 public class EmployeeServiceImpl implements EmployeeService {
     private static Map<Long, Employee> employees = Collections.synchronizedMap(new HashMap<>());
-    private JSONArray jsonArray = JSONArray.fromObject(emplyeesList);
-    public static final String emplyeesList = "[{'id': 1,'name': '小明','age': 20,'gender': '男'}," +
+    private List<Employee> list;
+    private static final String employeesList = "[{'id': 1,'name': '小明','age': 20,'gender': '男'}," +
             "{'id': 2,'name': '小红','age': 19,'gender': '女'}," +
             "{'id': 3,'name': '小智','age': 15,'gender': '男'}," +
             "{'id': 4,'name': '小刚','age': 16,'gender': '男'}," +
             "{'id': 5,'name': '小霞','age': 15,'gender': '女'}]";
 
     public EmployeeServiceImpl() {
-        List<Employee> list = JSONArray.toList(jsonArray, new Employee() ,new JsonConfig());
-        list.stream().forEach(item -> {
+        JSONArray jsonArray = JSONArray.fromObject(employeesList);
+        list = JSONArray.toList(jsonArray, new Employee(), new JsonConfig());
+        list.forEach(item -> {
             employees.put(item.getId(), item);
         });
     }
 
     @Override
     public List<Employee> getEmployeeList() {
-        List<Employee> list = new ArrayList<>(employees.values());
-        return list;
+        return new ArrayList<>(employees.values());
     }
 
     @Override
-    public String saveEmployee(Employee employee) throws Exception{
-        if (employee.getId() == null || employee.getAge() == null || employee.getName() == null || employee.getGender() == null) {
-            throw new Exception("Invalid Employee!");
+    public String saveEmployee(Employee employee) {
+        Long id;
+        if (!validateEmployeeInput(employee)) {
+            return null;
         }
-        employees.put(employee.getId(), employee);
+        if (employee.getId() == null) {
+            id = getLastEmployeeId() + 1;
+            employee.setId(id);
+        } else {
+            id = employee.getId();
+        }
+        employees.put(id, employee);
         return "success";
     }
 
     @Override
     public Employee getEmployee(Long id) {
-        return employees.containsKey(id) ? employees.get(id) : null;
+        return employees.getOrDefault(id, null);
     }
 
     @Override
-    public String updateEmployee(Long id, Employee employee) throws Exception {
-        if (employee.getId() == null || employee.getAge() == null || employee.getName() == null || employee.getGender() == null) {
-            throw new Exception("Invalid Employee!");
-        }
+    public String updateEmployee(Long id, Employee employee) {
         if (!employees.containsKey(id)) {
-            throw new Exception("Employee not found by id: " + id);
+            return null;
         }
-        Employee newEmplyee = employees.get(id);
-        newEmplyee.setName(employee.getName());
-        newEmplyee.setAge(employee.getAge());
-        newEmplyee.setGender(employee.getGender());
-        employees.put(id, newEmplyee);
+        if (!validateEmployeeInput(employee)) {
+            return "invalid";
+        }
+        Employee newEmployee = employees.get(id);
+        newEmployee.setName(employee.getName());
+        newEmployee.setAge(employee.getAge());
+        newEmployee.setGender(employee.getGender());
+        employees.put(id, newEmployee);
         return "success";
     }
 
     @Override
-    public String deleteEmployee(Long id) throws Exception {
+    public String deleteEmployee(Long id) {
         if (!employees.containsKey(id)) {
-            throw new Exception("Employee not found by id: " + id);
+            return null;
         }
         employees.remove(id);
         return "success";
+    }
+
+    public long getLastEmployeeId() {
+        Long id = 0L;
+        for (Map.Entry<Long, Employee> entry : employees.entrySet()) {
+            id = entry.getKey();
+        }
+        return id;
+    }
+
+    private boolean validateEmployeeInput(Employee employee) {
+        List<String> genderList = Arrays.asList("男", "女");
+        return employee.getName() != null && employee.getAge() != null && employee.getGender() != null && genderList.indexOf(employee.getGender()) != -1;
     }
 }
