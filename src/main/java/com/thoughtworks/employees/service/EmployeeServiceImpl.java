@@ -35,7 +35,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public String saveEmployee(Employee employee) {
         Long id;
-        if (!validateEmployeeInput(employee)) {
+        if (validateEmployeeInput(employee)) {
             return null;
         }
         if (employee.getId() == null) {
@@ -58,7 +58,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!employees.containsKey(id)) {
             return null;
         }
-        if (!validateEmployeeInput(employee)) {
+        if (validateEmployeeInput(employee)) {
             return "invalid";
         }
         Employee newEmployee = employees.get(id);
@@ -78,7 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return "success";
     }
 
-    public long getLastEmployeeId() {
+    private long getLastEmployeeId() {
         Long id = 0L;
         for (Map.Entry<Long, Employee> entry : employees.entrySet()) {
             id = entry.getKey();
@@ -88,6 +88,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private boolean validateEmployeeInput(Employee employee) {
         List<String> genderList = Arrays.asList("男", "女");
-        return employee.getName() != null && employee.getAge() != null && employee.getGender() != null && genderList.indexOf(employee.getGender()) != -1;
+        return employee.getName() == null || employee.getAge() == null || employee.getGender() == null || genderList.indexOf(employee.getGender()) == -1;
     }
 }
